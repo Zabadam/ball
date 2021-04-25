@@ -1,6 +1,8 @@
 /// ## 🏓 Bouncing Ball Demo
 library ball_demo;
 
+import 'package:flutter/material.dart';
+
 import 'package:ball/ball.dart';
 
 /// Mouse-over [BouncyBall.mold] or [ctrl]+[click]

@@ -17,6 +17,8 @@
 /// > > > > ### Now try some [Material]!
 library ball;
 
+import 'package:flutter/material.dart';
+
 import '../ball.dart';
 
 /// Modified to `bouncy_ball.dart` by Adam Skelton (Zabadam) 2021.

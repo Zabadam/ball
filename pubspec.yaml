@@ -1,6 +1,6 @@
 name: ball
 description: A delightfully bouncy and position-mirroring reaction to user input on a piece of Material. Totally customizable.
-version: 0.1.0
+version: 0.1.0+1
 repository: https://github.com/Zabadam/ball
 issue_tracker: https://github.com/Zabadam/ball/issues
 

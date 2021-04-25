@@ -19,6 +19,5 @@ library ball;
 
 export 'dart:ui' show ImageFilter;
 export 'dart:math' show max, Random;
-export 'package:flutter/material.dart';
 
 export 'src/bouncy_ball.dart';
