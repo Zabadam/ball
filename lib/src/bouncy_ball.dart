@@ -1,32 +1,18 @@
 /// ## 🏓 Bouncy Ball
-/// A delightfully bouncy and position-mirroring reaction
-/// to user input on a piece of [Material].
+/// Provides `BouncyBall` with user-facing `splashFactory`s.
 ///
-///
-/// Turn ink splashes for an [InkWell], [InkResponse] or material [Theme]
-/// into 🏓 [BouncyBall]s or 🔮 `Glass` [BouncyBall]s
-/// with the built-in [InteractiveInkFeatureFactory]s,
-/// or design your own with 🪀 [BouncyBall.mold].
-///
-/// ```
-/// ThemeData(
-///   splashFactory: BouncyBall.splashFactory,
-///   splashColor: Colors.red,
-/// )
-/// ```
-/// > > > > ### Now try some [Material]!
-library ball;
-
-import 'package:flutter/material.dart';
-
-import '../ball.dart';
-
 /// Modified to `bouncy_ball.dart` by Adam Skelton (Zabadam) 2021.
 ///
 /// ### Original `ink_ripple.dart`:
 /// Copyright 2014 The Flutter Authors. All rights reserved.
 /// Use of that source code is governed by a BSD-style license that can be
 /// found in the Flutter LICENSE file.
+library ball;
+
+import 'dart:math' show max;
+import 'dart:ui' show ImageFilter;
+
+import 'package:flutter/material.dart';
 
 const Duration _kUnconfirmedDuration = Duration(milliseconds: 1000);
 const Duration _kFadeInDuration = Duration(milliseconds: 25);
@@ -35,15 +21,19 @@ const Duration _kConfirmDuration = Duration(milliseconds: 1000);
 const Duration _kFadeOutDuration = Duration(milliseconds: 600);
 
 /// Classic.
+// ignore: constant_identifier_names
 const Curve _CUSTOM_INK = Curves.elasticOut;
 
 /// A good bounce.
+// ignore: constant_identifier_names
 const Curve _BOUNCY_BALL = Curves.bounceOut;
 
 /// "Bounce toward the finger"
+// ignore: constant_identifier_names
 const Curve _TOWARD_FINGER = Curves.bounceIn;
 
 /// Warp, or BouncyBall to your face
+// ignore: constant_identifier_names
 const Curve _TOWARD_FACE = Curves.slowMiddle;
 
 final Animatable<double> _radiusCurveTween =
@@ -53,7 +43,10 @@ final Animatable<double> _fadeOutIntervalTween =
     CurveTween(curve: const Interval(7 / 10, 1));
 
 RectCallback? _getClipCallback(
-    RenderBox referenceBox, bool containedInkWell, RectCallback? rectCallback) {
+  RenderBox referenceBox,
+  bool containedInkWell,
+  RectCallback? rectCallback,
+) {
   if (rectCallback != null) {
     assert(containedInkWell);
     return rectCallback;
@@ -62,46 +55,56 @@ RectCallback? _getClipCallback(
   return null;
 }
 
-double _getTargetRadius(RenderBox referenceBox, bool containedInkWell,
-    RectCallback? rectCallback, Offset position) {
-  final Size size =
-      rectCallback != null ? rectCallback().size : referenceBox.size;
-  final double d1 = size.bottomRight(Offset.zero).distance;
-  final double d2 =
-      (size.topRight(Offset.zero) - size.bottomLeft(Offset.zero)).distance;
-  return max(d1, d2) / 2;
+double _getTargetRadius(
+  RenderBox referenceBox,
+  bool containedInkWell,
+  RectCallback? rectCallback,
+  Offset position,
+) {
+  final size = rectCallback != null ? rectCallback().size : referenceBox.size;
+  final br = size.bottomRight(Offset.zero).distance;
+  return max(
+          br,
+          (size.topRight(Offset.zero) - size.bottomLeft(Offset.zero))
+              .distance) /
+      2;
 }
 
-/// ### 🏓 [BouncyBall]
-/// A delightfully bouncy and position-mirroring reaction
+/// | [![random splashFactory and color on every tap--bouncy balls!](https://raw.githubusercontent.com/Zabadam/ball/master/doc/variety_tiny.gif)](https://pub.dev/packages/ball/example 'random splashFactory and color on every tap--bouncy balls!') | <h1>🏓 `BouncyBall`</h1> |
+/// |:-:|:-:|
+///
+/// A delightfully bouncy and position-mirroring reaction \
 /// to user input on a piece of [Material].
 ///
-/// #### [splashFactory]
-/// An [InteractiveInkFeatureFactory] that produces 🏓 [BouncyBall]s as the ink splashes
-/// #### [marbleFactory]
-/// An [InteractiveInkFeatureFactory] that produces 🔮 Glass [BouncyBall]s as the ink splashes
-/// #### [splashFactory2] [splashFactory3] & [splashFactory4]
-/// [InteractiveInkFeatureFactory]s that produce 🏓 [BouncyBall]s
-/// as their ink splashes with varying [_bounce] patterns.
-/// #### [BouncyBall.mold]
-/// An [InteractiveInkFeatureFactory] factory whose `splashFactory`
-/// 🪀 [mold]s 🏓 [BouncyBalls]s from custom `rubber` [Paint].
+/// ### [splashFactory]
+/// | [![BouncyBall.splashFactory - bounce: "Bouncy Ball"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.splashFactory - bounce: "Bouncy Ball"') | An [InteractiveInkFeatureFactory] that produces 🏓 `BouncyBall`s as the ink splashes. |
+/// |:-:|:--|
+///
+/// ### [marbleFactory]
+/// | [![BouncyBall.marbleFactory - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.marbleFactory - bounce: "Toward Finger"') | An [InteractiveInkFeatureFactory] that produces 🔮 Glass `BouncyBall`s (marbles) as the ink splashes. |
+/// |:-:|:--|
+///
+/// ### [splashFactory2], [splashFactory3], & [splashFactory4]
+/// | [![BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2.gif 'BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)') | [InteractiveInkFeatureFactory]s that produce 🏓 `BouncyBall`s as their ink splashes with varying bounce patterns. |
+/// |:-:|:--|
+/// | [![BouncyBall.splashFactory3 - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3.gif 'BouncyBall.splashFactory3 - bounce: "Toward Finger"') | [![BouncyBall.splashFactory4 - bounce: "Toward Face"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4.gif 'BouncyBall.splashFactory4 - bounce: "Toward Face"') |
+///
+/// ### [BouncyBall.mold]
+/// An [InteractiveInkFeatureFactory] factory whose `splashFactory` \
+/// 🪀 [mold]s 🏓 `BouncyBall`s from custom `rubber` [Paint].
 /// ___
 ///
 /// A circular ink feature whose origin immediately moves from input touch point
-/// to an X- and Y-mirrored point opposite the touch point; and whose radius
-/// expands from 0% of the final size to twice that of its [referenceBox].
+/// to an X- and Y-mirrored point opposite the touch point, growing to
+/// twice the size of its [referenceBox].
 ///
-/// The splash origin bounce-animates to the target mirror point of its
-/// [referenceBox] as it grows in radius and fades-in.
-///
-/// This object is rarely created directly.
-/// Instead of creating a 🏓 [BouncyBall], consider using an
+/// This object is rarely created directly. \
+/// Instead of creating a 🏓 `BouncyBall`, consider using an
 /// [InkResponse] or [InkWell] widget, which uses gestures
 /// (such as tap and long-press) to trigger ink splashes.
 ///
 /// When the [Theme]'s [ThemeData.splashFactory]
-/// is 🏓 [BouncyBall.splashFactory], ink splashes will be 🏓 [BouncyBall]s.
+/// is [BouncyBall.splashFactory], ink splashes will be 🏓 `BouncyBall`s.
 /// ___
 ///
 /// See also:
@@ -114,70 +117,6 @@ double _getTargetRadius(RenderBox referenceBox, bool containedInkWell,
 ///  * [InkHighlight], which is an ink feature that emphasizes a part of a
 ///  [Material]
 class BouncyBall extends InteractiveInkFeature {
-  /// ### 🏓 [BouncyBall]s
-  /// #### Bounce: _BOUNCY_BALL
-  /// A delightfully bouncy and position-mirroring reaction
-  /// to user input on a piece of [Material].
-  ///
-  /// Use this [InteractiveInkFeatureFactory] to produce
-  /// 🏓 [BouncyBall]s as the ink splashes for an
-  /// [InkWell], [InkResponse] or material [Theme].
-  static const InteractiveInkFeatureFactory splashFactory =
-      _BouncyBallFactory();
-
-  /// ### 🏓 [BouncyBall]s
-  /// #### Bounce: _CUSTOM_INK (Classic)
-  /// A delightfully bouncy and position-mirroring reaction
-  /// to user input on a piece of [Material].
-  ///
-  /// Use this [InteractiveInkFeatureFactory] to produce
-  /// 🏓 [BouncyBall]s as the ink splashes for an
-  /// [InkWell], [InkResponse] or material [Theme].
-  static const InteractiveInkFeatureFactory splashFactory2 =
-      _BouncyBallFactory(bounce: _CUSTOM_INK);
-
-  /// ### 🏓 [BouncyBall]s
-  /// #### Bounce: _TOWARD_FINGER
-  /// A delightfully bouncy and position-mirroring reaction
-  /// to user input on a piece of [Material].
-  ///
-  /// Use this [InteractiveInkFeatureFactory] to produce
-  /// 🏓 [BouncyBall]s as the ink splashes for an
-  /// [InkWell], [InkResponse] or material [Theme].
-  static const InteractiveInkFeatureFactory splashFactory3 =
-      _BouncyBallFactory(bounce: _TOWARD_FINGER);
-
-  /// ### 🏓 [BouncyBall]s
-  /// #### Bounce: _TOWARD_FACE
-  /// A delightfully bouncy and position-mirroring reaction
-  /// to user input on a piece of [Material].
-  ///
-  /// Use this [InteractiveInkFeatureFactory] to produce
-  /// 🏓 [BouncyBall]s as the ink splashes for an
-  /// [InkWell], [InkResponse] or material [Theme].
-  static const InteractiveInkFeatureFactory splashFactory4 =
-      _BouncyBallFactory(bounce: _TOWARD_FACE);
-
-  /// ### 🔮 [marbleFactory] | Glass 🏓 [BouncyBall]s
-  /// #### Bounce: _TOWARD_FINGER
-  /// A delightfully bouncy and position-mirroring reaction
-  /// to user input on a piece of [Material].
-  ///
-  /// Use this [InteractiveInkFeatureFactory] to produce
-  /// 🔮 Glass [BouncyBall]s as the ink splashes for an
-  /// [InkWell], [InkResponse] or material [Theme].
-  static const InteractiveInkFeatureFactory marbleFactory = _MarbleFactory();
-
-  /// ### 🪀 [mold] 🏓 [BouncyBall]s
-  /// #### Bounce: _BOUNCY_BALL
-  /// A delightfully bouncy and position-mirroring reaction
-  /// to user input on a piece of [Material].
-  ///
-  /// Design a `splashFactory` that produces 🏓 [BouncyBall]s
-  /// 🪀 [mold]ed from [rubber] with this [Paint].
-  static InteractiveInkFeatureFactory mold({required Paint rubber}) =>
-      _BouncyBallFactory(rubber: rubber);
-
   /// Begin a ripple, centered at [position] relative to [referenceBox].
   ///
   /// The [controller] argument is typically obtained via
@@ -233,7 +172,7 @@ class BouncyBall extends InteractiveInkFeature {
       end: color.alpha, // End at the opacity of provided [color]
     ));
 
-    /// Controls the splash radius and its center. Starts upon confirm.
+    /// Controls the splash radius and its center. Starts upon `confirm`.
     _radiusController = AnimationController(
         duration: _kUnconfirmedDuration, vsync: controller.vsync)
       ..addListener(controller.markNeedsPaint)
@@ -247,8 +186,7 @@ class BouncyBall extends InteractiveInkFeature {
       end: _targetRadius * 2,
     ).chain(_radiusCurveTween));
 
-    /// Controls the splash radius and its center. Starts upon confirm however its
-    /// Interval delays changes until the radius expansion has completed.
+    /// Controls the splash radius and its center.
     _fadeOutController = AnimationController(
         duration: _kFadeOutDuration, vsync: controller.vsync)
       ..addListener(controller.markNeedsPaint)
@@ -281,57 +219,98 @@ class BouncyBall extends InteractiveInkFeature {
   late Animation<int> _fadeOut;
   late AnimationController _fadeOutController;
 
+  /// #### Bounce: "Bouncy Ball"
+  ///
+  /// | [![BouncyBall.splashFactory - bounce: "Bouncy Ball"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.splashFactory - bounce: "Bouncy Ball"') | Use this [InteractiveInkFeatureFactory] to produce 🏓 [BouncyBall]s as the ink splashes for an [InkWell], [InkResponse] or material [Theme]. |
+  /// |:-:|:--|
+  static const InteractiveInkFeatureFactory splashFactory =
+      _BouncyBallFactory();
+
+  /// #### Bounce: "Custom Ink" (Classic)
+  ///
+  /// | [![BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2.gif 'BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)') | Use this [InteractiveInkFeatureFactory] to produce 🏓 [BouncyBall]s as the ink splashes for an [InkWell], [InkResponse] or material [Theme]. |
+  /// |:-:|:--|
+  static const InteractiveInkFeatureFactory splashFactory2 =
+      _BouncyBallFactory(bounce: _CUSTOM_INK);
+
+  /// #### Bounce: "Toward Finger"
+  ///
+  /// | [![BouncyBall.splashFactory3 - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3.gif 'BouncyBall.splashFactory3 - bounce: "Toward Finger"') | Use this [InteractiveInkFeatureFactory] to produce 🏓 [BouncyBall]s as the ink splashes for an [InkWell], [InkResponse] or material [Theme]. |
+  /// |:-:|:--|
+  static const InteractiveInkFeatureFactory splashFactory3 =
+      _BouncyBallFactory(bounce: _TOWARD_FINGER);
+
+  /// #### Bounce: "Toward Face"
+  ///
+  /// | [![BouncyBall.splashFactory4 - bounce: "Toward Face"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4.gif 'BouncyBall.splashFactory4 - bounce: "Toward Face"') | Use this [InteractiveInkFeatureFactory] to produce 🏓 [BouncyBall]s as the ink splashes for an [InkWell], [InkResponse] or material [Theme]. |
+  /// |:-:|:--|
+  static const InteractiveInkFeatureFactory splashFactory4 =
+      _BouncyBallFactory(bounce: _TOWARD_FACE);
+
+  /// ### 🔮 [marbleFactory] | Glass 🏓 [BouncyBall]s
+  /// #### Bounce: "Toward Finger"
+  ///
+  /// | [![BouncyBall.marbleFactory - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.marbleFactory - bounce: "Toward Finger"') | Use this [InteractiveInkFeatureFactory] to produce 🔮 Glass [BouncyBall]s as the ink splashes for an [InkWell], [InkResponse] or material [Theme]. |
+  /// |:-:|:--|
+  static const InteractiveInkFeatureFactory marbleFactory = _MarbleFactory();
+
+  /// ### 🪀 [mold] 🏓 [BouncyBall]s
+  /// #### Bounce: "Bouncy Ball"
+  /// A delightfully bouncy and position-mirroring reaction
+  /// to user input on a piece of [Material].
+  ///
+  /// Design a `splashFactory` that produces 🏓 [BouncyBall]s
+  /// 🪀 [mold]ed from [rubber] with this [Paint].
+  ///
+  /// ---
+  /// | [![BouncyBall.splashFactory - bounce: "Bouncy Ball"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.splashFactory - bounce: "Bouncy Ball"') | Bounce pattern follows 🏓 [splashFactory]'s "Bouncy Ball" |
+  /// |:-:|:--|
+  static InteractiveInkFeatureFactory mold({required Paint rubber}) =>
+      _BouncyBallFactory(rubber: rubber);
+
   @override
   void paintFeature(Canvas canvas, Matrix4 transform) {
     // Mirror splash around [referenceBox.size.center] from [_position]
-    final _refCenter = referenceBox.size.center(Offset.zero);
-    final double _dx = -(_position.dx.toDouble() - _refCenter.dx);
-    final double _dy = -(_position.dy.toDouble() - _refCenter.dy);
-    final Offset _mirror = Offset.lerp(
+    final _center = referenceBox.size.center(Offset.zero);
+    final _dx = -(_position.dx.toDouble() - _center.dx);
+    final _dy = -(_position.dy.toDouble() - _center.dy);
+    final _mirror = Offset.lerp(
       _position,
       referenceBox.size.center(Offset(_dx, _dy)),
       _bounce.transform(_radiusController.value),
-    )!;
+    );
+
     // Default `Paint().color != Colors.transparent == 0x00000000`
-    // final _alpha = _fadeInController.isAnimating ? _fadeIn.value : _fadeOut.value
-    final Color _color =
+    final _color =
         ((_rubber.color == const Color(0xff000000)) ? color : _rubber.color)
             .withAlpha(
       (_fadeInController.isAnimating ? _fadeIn.value : _fadeOut.value),
     );
 
     paintInkCircle(
-      canvas: canvas,
-      transform: transform,
-      center: _mirror,
-      textDirection: _textDirection,
-      radius: _radius.value,
-      customBorder: _customBorder,
-      borderRadius: _borderRadius,
-      clipCallback: _clipCallback,
-      paint: Paint()
-        ..color = _color
-        ..blendMode = _rubber.blendMode
-        ..colorFilter = _rubber.colorFilter
-        ..colorFilter = _rubber.colorFilter
-        ..filterQuality = _rubber.filterQuality
-        ..filterQuality = _rubber.filterQuality
-        ..imageFilter = _rubber.imageFilter
-        ..imageFilter = _rubber.imageFilter
-        ..invertColors = _rubber.invertColors
-        ..invertColors = _rubber.invertColors
-        ..isAntiAlias = _rubber.isAntiAlias
-        ..isAntiAlias = _rubber.isAntiAlias
-        ..maskFilter = _rubber.maskFilter
-        ..maskFilter = _rubber.maskFilter
-        ..shader = _rubber.shader
-        ..shader = _rubber.shader
-        ..strokeCap = _rubber.strokeCap
-        ..strokeJoin = _rubber.strokeJoin
-        ..strokeMiterLimit = _rubber.strokeMiterLimit
-        ..strokeWidth = _rubber.strokeWidth
-        ..style = _rubber.style,
-    );
+        canvas: canvas,
+        transform: transform,
+        center: _mirror ?? Offset.zero,
+        textDirection: _textDirection,
+        radius: _radius.value,
+        customBorder: _customBorder,
+        borderRadius: _borderRadius,
+        clipCallback: _clipCallback,
+        paint: Paint()
+          ..isAntiAlias = _rubber.isAntiAlias
+          ..shader = _rubber.shader
+          ..blendMode = _rubber.blendMode
+          ..imageFilter = _rubber.imageFilter
+          ..maskFilter = _rubber.maskFilter
+          ..colorFilter = _rubber.colorFilter
+          ..filterQuality = _rubber.filterQuality
+          ..color = _color
+          ..style = _rubber.style
+          ..strokeWidth = _rubber.strokeWidth
+          ..strokeCap = _rubber.strokeCap
+          ..strokeJoin = _rubber.strokeJoin
+          ..strokeMiterLimit = _rubber.strokeMiterLimit
+          ..invertColors = _rubber.invertColors);
   }
 
   @override
@@ -358,10 +337,11 @@ class BouncyBall extends InteractiveInkFeature {
     // Watch out: setting _fadeOutController's value to 1.0 will
     // trigger a call to _handleAlphaStatusChanged() which will
     // dispose _fadeOutController.
-    final double fadeOutValue = 1.0 - _fadeInController.value;
+    final fadeOutValue = 1.0 - _fadeInController.value;
     _fadeOutController.value = fadeOutValue;
-    if (fadeOutValue < 1.0)
+    if (fadeOutValue < 1.0) {
       _fadeOutController.animateTo(1.0, duration: _kCancelDuration);
+    }
   }
 
   void _handleAlphaStatusChanged(AnimationStatus status) =>
@@ -397,23 +377,22 @@ class _BouncyBallFactory extends InteractiveInkFeatureFactory {
     ShapeBorder? customBorder,
     double? radius,
     VoidCallback? onRemoved,
-  }) {
-    return BouncyBall(
-      controller: controller,
-      referenceBox: referenceBox,
-      position: position,
-      color: color,
-      containedInkWell: containedInkWell,
-      rectCallback: rectCallback,
-      borderRadius: borderRadius,
-      customBorder: customBorder,
-      radius: radius,
-      onRemoved: onRemoved,
-      textDirection: textDirection,
-      rubber: rubber ?? Paint(),
-      bounce: bounce,
-    );
-  }
+  }) =>
+      BouncyBall(
+        rubber: rubber ?? Paint(),
+        bounce: bounce,
+        controller: controller,
+        referenceBox: referenceBox,
+        position: position,
+        color: color,
+        containedInkWell: containedInkWell,
+        rectCallback: rectCallback,
+        borderRadius: borderRadius,
+        customBorder: customBorder,
+        radius: radius,
+        onRemoved: onRemoved,
+        textDirection: textDirection,
+      );
 }
 
 class _MarbleFactory extends InteractiveInkFeatureFactory {
@@ -432,25 +411,24 @@ class _MarbleFactory extends InteractiveInkFeatureFactory {
     ShapeBorder? customBorder,
     double? radius,
     VoidCallback? onRemoved,
-  }) {
-    return BouncyBall(
-      controller: controller,
-      referenceBox: referenceBox,
-      position: position,
-      color: color,
-      containedInkWell: containedInkWell,
-      rectCallback: rectCallback,
-      borderRadius: borderRadius,
-      customBorder: customBorder,
-      radius: radius,
-      onRemoved: onRemoved,
-      textDirection: textDirection,
-      rubber: Paint()
-        ..imageFilter = ImageFilter.blur(sigmaX: 10, sigmaY: 10)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 50
-        ..maskFilter = MaskFilter.blur(BlurStyle.solid, 20),
-      bounce: _TOWARD_FINGER,
-    );
-  }
+  }) =>
+      BouncyBall(
+        rubber: Paint()
+          ..imageFilter = ImageFilter.blur(sigmaX: 10, sigmaY: 10)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 50
+          ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 20),
+        bounce: _TOWARD_FINGER,
+        controller: controller,
+        referenceBox: referenceBox,
+        position: position,
+        color: color,
+        containedInkWell: containedInkWell,
+        rectCallback: rectCallback,
+        borderRadius: borderRadius,
+        customBorder: customBorder,
+        radius: radius,
+        onRemoved: onRemoved,
+        textDirection: textDirection,
+      );
 }
