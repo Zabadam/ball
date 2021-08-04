@@ -70,24 +70,25 @@ double _getTargetRadius(
       2;
 }
 
-/// | [![random splashFactory and color on every tap--bouncy balls!](https://raw.githubusercontent.com/Zabadam/ball/master/doc/variety_tiny.gif)](https://pub.dev/packages/ball/example 'random splashFactory and color on every tap--bouncy balls!') | <h1>🏓 `BouncyBall`</h1> |
+/// # 🏓 `BouncyBall`
+/// | [![random splashFactory and color on every tap--bouncy balls!](https://raw.githubusercontent.com/Zabadam/ball/master/doc/variety_tiny.gif)](https://pub.dev/packages/ball/example 'random splashFactory and color on every tap--bouncy balls!') | A delightfully bouncy and position-mirroring reaction to user input on a piece of [Material]. |
 /// |:-:|:-:|
-///
-/// A delightfully bouncy and position-mirroring reaction \
-/// to user input on a piece of [Material].
 ///
 /// ### [splashFactory]
 /// | [![BouncyBall.splashFactory - bounce: "Bouncy Ball"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.splashFactory - bounce: "Bouncy Ball"') | An [InteractiveInkFeatureFactory] that produces 🏓 `BouncyBall`s as the ink splashes. |
 /// |:-:|:--|
 ///
 /// ### [marbleFactory]
-/// | [![BouncyBall.marbleFactory - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.marbleFactory - bounce: "Toward Finger"') | An [InteractiveInkFeatureFactory] that produces 🔮 Glass `BouncyBall`s (marbles) as the ink splashes. |
+/// | [![BouncyBall.marbleFactory - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/marbleFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/marbleFactory.gif 'BouncyBall.marbleFactory - bounce: "Toward Finger"') | An [InteractiveInkFeatureFactory] that produces 🔮 Glass `BouncyBall`s (marbles) as the ink splashes. |
 /// |:-:|:--|
 ///
 /// ### [splashFactory2], [splashFactory3], & [splashFactory4]
-/// | [![BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2.gif 'BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)') | [InteractiveInkFeatureFactory]s that produce 🏓 `BouncyBall`s as their ink splashes with varying bounce patterns. |
-/// |:-:|:--|
-/// | [![BouncyBall.splashFactory3 - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3.gif 'BouncyBall.splashFactory3 - bounce: "Toward Finger"') | [![BouncyBall.splashFactory4 - bounce: "Toward Face"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4.gif 'BouncyBall.splashFactory4 - bounce: "Toward Face"') |
+/// [InteractiveInkFeatureFactory]s that produce 🏓 `BouncyBall`s \
+/// as their ink splashes with varying bounce patterns.
+///
+/// |   |   |   |
+/// |:--|:--|:-:|
+/// | [![BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory2.gif 'BouncyBall.splashFactory2 - bounce: "Custom Ink" (Classic)') | [![BouncyBall.splashFactory3 - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory3.gif 'BouncyBall.splashFactory3 - bounce: "Toward Finger"') | [![BouncyBall.splashFactory4 - bounce: "Toward Face"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory4.gif 'BouncyBall.splashFactory4 - bounce: "Toward Face"') |
 ///
 /// ### [BouncyBall.mold]
 /// An [InteractiveInkFeatureFactory] factory whose `splashFactory` \
@@ -250,7 +251,7 @@ class BouncyBall extends InteractiveInkFeature {
   /// ### 🔮 [marbleFactory] | Glass 🏓 [BouncyBall]s
   /// #### Bounce: "Toward Finger"
   ///
-  /// | [![BouncyBall.marbleFactory - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/splashFactory.gif 'BouncyBall.marbleFactory - bounce: "Toward Finger"') | Use this [InteractiveInkFeatureFactory] to produce 🔮 Glass [BouncyBall]s as the ink splashes for an [InkWell], [InkResponse] or material [Theme]. |
+  /// | [![BouncyBall.marbleFactory - bounce: "Toward Finger"](https://raw.githubusercontent.com/Zabadam/ball/master/doc/marbleFactory_small.gif)](https://raw.githubusercontent.com/Zabadam/ball/master/doc/marbleFactory.gif 'BouncyBall.marbleFactory - bounce: "Toward Finger"') | Use this [InteractiveInkFeatureFactory] to produce 🔮 Glass [BouncyBall]s as the ink splashes for an [InkWell], [InkResponse] or material [Theme]. |
   /// |:-:|:--|
   static const InteractiveInkFeatureFactory marbleFactory = _MarbleFactory();
 

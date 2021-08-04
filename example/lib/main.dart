@@ -58,7 +58,7 @@ class BallPit extends StatefulWidget {
   /// {@template ballpit}
   /// A full-screen [InkResponse] with an `onTap` to provide ink splashes.
   ///
-  /// Override the `splashFactory` with a rnadom entry from a list of them.
+  /// Override the `splashFactory` with a random entry from a List of them.
   /// {@endtemplate}
   const BallPit({Key? key}) : super(key: key);
 

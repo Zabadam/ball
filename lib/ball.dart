@@ -1,6 +1,6 @@
-/// ## 🏓 Bouncy Ball
-/// A delightfully bouncy and position-mirroring reaction
-/// to user input on a piece of `Material`.
+/// ## 🏓 Ball
+/// Provides `BouncyBall`s, delightfully bouncy and position-mirroring
+/// ink splash reactions to user input on a piece of `Material`.
 ///
 /// ## [pub.dev Listing](https://pub.dev/packages/ball) | [API Doc](https://pub.dev/documentation/ball/latest) | [GitHub](https://github.com/Zabadam/ball)
 /// #### API References: [`BouncyBall`](https://pub.dev/documentation/ball/latest/ball/BouncyBall-class.html)
